@@ -20,8 +20,10 @@ It is the same audit that runs at
 
 **Free — eight questions about one process.** Pick the thing your people still
 do by hand. The interview maps it and says what it costs now and what changes
-if it runs itself. No account needed in the browser; over MCP, see
-[Authentication](#authentication).
+if it runs itself. No account needed in the browser; from an agent, the
+interview and the arithmetic need none either — see
+[Works before you sign in](#works-before-you-sign-in) — and the reading itself
+needs one.
 
 **Premium — forty-three slots across the whole business**, grouped into
 strategy, marketing, operations, finance and technology. The interview has a
@@ -33,14 +35,82 @@ cannot conduct two thirds of the conversation.
 The first eight slots of a premium run are the free eight, unchanged. An audit
 that upgrades mid-way is not asked them twice.
 
+## Works before you sign in
+
+Two of the tools run entirely on your machine. No account, no allowance, no
+call home.
+
+`diagnostic_questions` hands over the interview itself — the eight things a
+diagnostic has to establish, in the words they are asked in — and your
+assistant conducts it, in the person's own language, with options that look
+like their industry. `read_answers` then does the arithmetic on what came back.
+
+```
+> Eighty enquiries a day between the two of us, mostly WhatsApp, kept in a spreadsheet.
+
+  read_answers(answers: {...})
+
+  From what you have been told:
+    80 enquiries a day across 2 people — 40 each.
+    12 of them become leads — 15% of what arrives.
+    3 channels enquiries arrive on. The record of them: a spreadsheet.
+
+  That is the arithmetic. What it cannot do is say what to automate first.
+```
+
+The split falls where the competences do. A model conducts an interview far
+better than it divides eighty by two and remembers what the range said, so the
+caller asks and this counts — and every assumption it had to make is printed
+beside the result ("read 50-100 as 75").
+
+Signing in adds the audit itself: the next question chosen from everything
+already said, the findings written against them, a run saved under your account
+that you can come back to, and the forty-three question depth.
+
+## Install
+
+**Claude Desktop, Cursor, or any client that launches a stdio server:**
+
+```json
+{
+  "mcpServers": {
+    "inite-diagnostic": {
+      "command": "npx",
+      "args": ["-y", "@inite/diagnostic"]
+    }
+  }
+}
+```
+
+Then, when you want the audit rather than the arithmetic:
+
+```sh
+npx @inite/diagnostic login
+```
+
+That opens a browser, you approve, and the token is stored at
+`~/.config/inite/mcp-diagnostic.json` with owner-only permissions.
+Authorization code with PKCE over a loopback redirect, the flow RFC 8252
+prescribes for a native app. Nothing is written to the repository and no secret
+ships in the package.
+
+**Its own file, not the one `@inite/visibility` writes.** Both tokens are
+issued by the same authorization server and belong to the same person, and
+neither works in the other's place: RFC 8707 binds each one to the `resource`
+it was asked for. Sharing a file would mean the second `login` silently
+replaced the first one's token with something that 401s. For the same reason
+this package reads `INITE_DIAGNOSTIC_TOKEN` before `INITE_TOKEN`.
+
 ## Tools
 
-| tool | what it does |
-|---|---|
-| `start_audit` | Begins the interview, returns the first question and an `audit_token` |
-| `answer_audit` | Records one answer against the field the question named, returns the next question — or the findings when the interview is over |
-| `get_audit` | Depth, what was answered, what was declined, what is still open, and the findings if they exist |
-| `upgrade_audit` | Spends a paid run if the account has one; otherwise returns a checkout link |
+| tool | what it does | account |
+|---|---|---|
+| `diagnostic_questions` | The eight fields, in the words they are asked in, for you to interview from | no |
+| `read_answers` | The arithmetic on what you collected, with every assumption stated | no |
+| `start_audit` | Begins the interview, returns the first question and an `audit_token` | yes |
+| `answer_audit` | Records one answer against the field the question named, returns the next question — or the findings when the interview is over | yes |
+| `get_audit` | Depth, what was answered, what was declined, what is still open, and the findings if they exist | yes |
+| `upgrade_audit` | Spends a paid run if the account has one; otherwise returns a checkout link | yes |
 
 `upgrade_audit` deliberately stops short of buying. With nothing paid for on
 the account it hands back a URL for a person to open. An agent is not given a
@@ -68,9 +138,11 @@ as a wall of JSON under "Industry: N/A".
 The full list, generated from the server's own definitions, is in
 [SLOTS.md](SLOTS.md).
 
-## Connect
+## Connect without the package
 
-A remote server over streamable HTTP. There is no package to install.
+A client that speaks the MCP authorization flow can talk to the remote server
+directly. There are no local tools that way — the two above live in the
+package — and every call needs a token.
 
 ```json
 {
@@ -85,8 +157,8 @@ A remote server over streamable HTTP. There is no package to install.
 
 ## Authentication
 
-Every call needs a bearer token, and the only thing available without one is
-how to get a token.
+Every call to the *remote* server needs a bearer token, and the only thing
+available without one is how to get a token. The two local tools need nothing.
 
 An unauthenticated request returns `401` with a `WWW-Authenticate` header
 pointing at

@@ -1,0 +1,51 @@
+{
+  "name": "@inite/diagnostic",
+  "mcpName": "solutions.inite/inite-diagnostic",
+  "version": "1.0.0",
+  "description": "MCP server for the INITE process diagnostic — take a business process apart from inside your agent and find out what it costs.",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "automation",
+    "process-audit",
+    "business-process",
+    "ai-agent"
+  ],
+  "license": "MIT",
+  "author": "INITE (https://inite.solutions)",
+  "homepage": "https://inite.solutions/en/audit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inite-ai/inite-diagnostic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/inite-ai/inite-diagnostic/issues"
+  },
+  "type": "module",
+  "bin": {
+    "inite-diagnostic": "dist/bin.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "SLOTS.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test test/*.test.js",
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}
