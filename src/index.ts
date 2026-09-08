@@ -37,7 +37,7 @@ import { formatReading } from "./reading.js";
  */
 
 export const REMOTE = process.env.INITE_MCP_URL ?? "https://inite.solutions/api/mcp";
-export const VERSION = "1.0.0";
+export const VERSION = "1.1.0";
 
 export class NotSignedIn extends Error {
   constructor() {

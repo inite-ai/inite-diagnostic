@@ -1,8 +1,8 @@
 {
   "name": "@inite/diagnostic",
   "mcpName": "solutions.inite/inite-diagnostic",
-  "version": "1.0.0",
-  "description": "MCP server for the INITE process diagnostic — take a business process apart from inside your agent and find out what it costs.",
+  "version": "1.1.0",
+  "description": "MCP server for the INITE process diagnostic \u2014 take a business process apart from inside your agent and find out what it costs.",
   "keywords": [
     "mcp",
     "modelcontextprotocol",
