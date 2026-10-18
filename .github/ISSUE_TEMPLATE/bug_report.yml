@@ -1,0 +1,36 @@
+name: Bug report
+description: A tool or command in @inite/diagnostic does not do what the README says.
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Remove any token before posting, and replace real business answers with made-up ones that still show the problem.
+  - type: input
+    id: tool
+    attributes:
+      label: Tool or command
+      placeholder: e.g. read_answers, start_audit, `inite-diagnostic login`
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The input (e.g. the answers object) and the output, including anything on stderr.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version, Node and MCP client
+      placeholder: "`npx @inite/diagnostic --version`, `node --version`, e.g. Cursor on Windows"
+    validations:
+      required: true
