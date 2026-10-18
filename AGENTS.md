@@ -209,6 +209,7 @@ says so" in `test/reading.test.js`. CI runs `npm ci`, `npm run build`,
 
 Issues: <https://github.com/inite-ai/inite-diagnostic/issues> (templates:
 product idea, bug). Contributing: [CONTRIBUTING.md](CONTRIBUTING.md).
-Security: do **not** open a public issue — this repo has no `SECURITY.md`
-yet; ask a maintainer for a private channel. Claude Code: `/contribute` runs
+Security: do **not** open a public issue — report privately via
+[SECURITY.md](SECURITY.md) (GitHub private vulnerability reporting, or
+security@inite.ai). Claude Code: `/contribute` runs
 the loop above; `/spec-idea` only files an idea.

@@ -21,5 +21,4 @@ issues. Changes to the slot list, the bridge, sign-in or the package identity
 (red zones in AGENTS.md) start as an issue that a maintainer approves before
 code.
 
-Security problems: please don't open a public issue — ask a maintainer for a
-private channel.
+Security problems: please don't open a public issue — see [SECURITY.md](SECURITY.md).
