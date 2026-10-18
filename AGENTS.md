@@ -66,8 +66,10 @@ repository — **there is no `server.json` here** (README "Registry").
 9. **Versions move together.** `package.json` `version` and `VERSION` in
    `src/index.ts` (handshake + user-agent) are equal (`1.1.0`), and the
    registry manifest in the service repo names the same version — a bump is a
-   maintainer step across both repos. Keep `name`, `bin` (one binary,
-   `inite-diagnostic`) and `mcpName` unchanged. Never run `npm publish`.
+   maintainer step across both repos. release-please moves the first two
+   (see Releasing); the registry manifest stays a maintainer step. Keep
+   `name`, `bin` (one binary, `inite-diagnostic`) and `mcpName` unchanged.
+   Never run `npm publish` yourself.
 10. **Don't hand-edit `dist/`** (git-ignored `tsc` output); no new runtime
     dependencies without asking (there is one: `@modelcontextprotocol/sdk`).
 
@@ -165,8 +167,8 @@ The loop you run **with** the human (Claude Code: `/contribute` runs it):
 7. Update the README where behaviour or tools changed.
 8. Commit: conventional commits (`feat(reading): …`, `fix: …`, `docs: …`,
    `!` for breaking). The first commits are plain sentences; new commits use
-   the conventional form. No release automation — versions are bumped by
-   hand (rule 9).
+   the conventional form. The commit type decides the next version (see
+   Releasing).
 9. Open a PR with the template filled, explaining the change to a
    non-engineer too.
 
@@ -194,6 +196,16 @@ wrap local-tool tests in `withoutNetwork()` and `signedOut()` from
 nonexistent path). Model for new arithmetic: "a range becomes its midpoint and
 says so" in `test/reading.test.js`. CI runs `npm ci`, `npm run build`,
 `npm test`.
+
+## Releasing
+
+release-please (`.github/workflows/release-please.yml`) reads the
+conventional commits on `main` and keeps a release PR open (`fix` → patch,
+`feat` → minor, `!` → major). Merging that PR bumps `package.json` and
+`VERSION`, writes `CHANGELOG.md`, tags `vX.Y.Z` and, in the same run,
+publishes to npm with provenance (`publish-npm.yml`, secret `NPM_TOKEN`). A
+version already on npm is skipped, so dispatching release-please by hand
+publishes whatever `main` carries and a re-run is safe.
 
 ## When to ask a human
 
