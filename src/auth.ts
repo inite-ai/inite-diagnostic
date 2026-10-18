@@ -265,6 +265,22 @@ async function refresh(stored: Stored, meta: Metadata): Promise<Stored | null> {
 }
 
 /**
+ * The token from the environment and the variable it came from, or null.
+ *
+ * Each name is trimmed before it is judged: an MCP client config that leaves
+ * `INITE_DIAGNOSTIC_TOKEN: " "` (or a stray newline) set is "not set", not a
+ * token. Choosing first and trimming after would let that blank hide a valid
+ * `INITE_TOKEN` and report "not signed in".
+ */
+export function envToken(): { token: string; source: "INITE_DIAGNOSTIC_TOKEN" | "INITE_TOKEN" } | null {
+  for (const source of ["INITE_DIAGNOSTIC_TOKEN", "INITE_TOKEN"] as const) {
+    const token = process.env[source]?.trim();
+    if (token) return { token, source };
+  }
+  return null;
+}
+
+/**
  * The token to send, or null.
  *
  * An environment variable wins when set: that is how an MCP client config
@@ -277,8 +293,8 @@ async function refresh(stored: Stored, meta: Metadata): Promise<Stored | null> {
  * fails as 401, which reads as "not signed in" after you just signed in.
  */
 export async function accessToken(): Promise<string | null> {
-  const fromEnv = (process.env.INITE_DIAGNOSTIC_TOKEN ?? process.env.INITE_TOKEN)?.trim();
-  if (fromEnv) return fromEnv;
+  const fromEnv = envToken();
+  if (fromEnv) return fromEnv.token;
 
   const stored = await load();
   if (!stored) return null;

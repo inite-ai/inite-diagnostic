@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { login, TOKEN_PATH, accessToken } from "./auth.js";
+import { login, TOKEN_PATH, accessToken, envToken } from "./auth.js";
 import { main, REMOTE, VERSION } from "./index.js";
 
 /**
@@ -20,11 +20,7 @@ async function run(): Promise<void> {
 
     case "whoami": {
       const token = await accessToken();
-      const source = process.env.INITE_DIAGNOSTIC_TOKEN
-        ? "INITE_DIAGNOSTIC_TOKEN"
-        : process.env.INITE_TOKEN
-          ? "INITE_TOKEN"
-          : TOKEN_PATH;
+      const source = envToken()?.source ?? TOKEN_PATH;
       process.stderr.write(
         token
           ? `Signed in. Token from ${source}.\n`
